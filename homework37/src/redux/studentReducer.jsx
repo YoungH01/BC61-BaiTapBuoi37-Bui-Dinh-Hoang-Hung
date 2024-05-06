@@ -20,6 +20,21 @@ const studentReducer=(state=stateDefault,action)=>{
             return {...state};
         }
         case 'CapNhat_SinhVien':{
+            let maSV=document.getElementById("maSV").value;
+            let name=document.getElementById("full-name").value;
+            let phone=document.getElementById("telephone").value;
+            let email=document.getElementById("email").value;
+            let updateDanhSachSinhVien=[...state.DanhSachSinhVien];
+            for(let i=0;i<updateDanhSachSinhVien.length;i++){
+                if(updateDanhSachSinhVien[i].maSV==action.id){
+                    updateDanhSachSinhVien[i]['maSV']=maSV;
+                    updateDanhSachSinhVien[i]['name']=name;
+                    updateDanhSachSinhVien[i]['phone']=phone;
+                    updateDanhSachSinhVien[i]['email']=email;
+                    break;
+                }
+            }
+            state.DanhSachSinhVien=updateDanhSachSinhVien;
             return {...state};
         }
         default: return {...state};

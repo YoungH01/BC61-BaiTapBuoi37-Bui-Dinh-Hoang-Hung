@@ -1,11 +1,12 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { connect } from 'react-redux'
 import RenderInforStudent from './RenderInforStudent'
 function FormStudent(props) {
   var arr = { maSV: "", name: "", phone: "", email: "" };
   var [modeOfPrint,editMode]=useState("");
   var [informationStudent,editDataStudent]=useState([]);
+  var [getIdUpdate,setIdUpdate]=useState(-1);
   const afterSubmission = (event) => {
     event.preventDefault();
     document.getElementById("maSV").value = '';
@@ -13,6 +14,7 @@ function FormStudent(props) {
     document.getElementById("telephone").value = '';
     document.getElementById("email").value = '';
     document.getElementById("default-search").value='';
+    document.getElementById("maSV").disabled=false;
   }
   const addStudent = () => {
     let maSV = document.getElementById("maSV").value;
@@ -41,8 +43,15 @@ function FormStudent(props) {
       editMode("search");
     }
   }
+  const updateStatus=()=>{
+    let id=document.getElementById("maSV").value;
+    setIdUpdate(getIdUpdate=id);
+  }
+  useEffect(()=>{
+      props.capNhatSinhVien(getIdUpdate);
+  },[getIdUpdate])
   return (
-    <div>
+    <div className=''>
       <form onSubmit={afterSubmission}>
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12">
@@ -77,7 +86,8 @@ function FormStudent(props) {
         </div>
         {/* button add */}
         <div className="mt-6 flex items-center justify-end gap-x-6">
-          <button onClick={() => {addStudent()}} type="submit" className="rounded-md bg-lime-500	 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Thêm sinh viên</button>
+          <button id="btnSubmit" onClick={() => {addStudent()}} type="submit" className="rounded-md bg-lime-500	 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Thêm sinh viên</button>
+          <button id="btnSubmit" onClick={() => {updateStatus()}} type="submit" className="rounded-md bg-indigo-600	 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Cập nhật </button>
         </div>
       </form>
       {/* form for search */}
@@ -108,6 +118,12 @@ const mapDispatchToProps = dispatch => {
       dispatch({
         type: 'Them_SinhVien',
         SinhVien: SinhVien
+      })
+    },
+    capNhatSinhVien:(id)=>{
+      dispatch({
+        type: 'CapNhat_SinhVien',
+        id:id
       })
     }
   }
